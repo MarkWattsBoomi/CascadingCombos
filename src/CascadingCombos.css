@@ -1,0 +1,30 @@
+.cascoms {
+    display: flex;
+}
+
+.cascoms-column {
+    flex-direction: column;
+    width: fit-content !important;
+}
+
+.cascoms-row {
+    flex-direction: row;
+    height: fit-content !important;
+}
+
+.cascom {
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+}
+
+.cascom-select {
+    appearance: unset !important;
+    -webkit-appearance: revert !important;
+    background: none !important;
+    padding: 5px;
+    font-size: 1.3rem !important;
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+    margin: 5px !important;
+}
