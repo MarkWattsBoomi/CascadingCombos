@@ -1,6 +1,7 @@
 import React from 'react';
 import { eContentType, FlowDisplayColumn, FlowObjectData, FlowObjectDataArray } from "flow-component-model";
 import CascadingCombo from "./CascadingCombo";
+import CascadingCombos from './CascadingCombos';
 
 export default class ValueTree {
     columns: Map<string,FlowDisplayColumn> = new Map();
@@ -11,7 +12,9 @@ export default class ValueTree {
 
     combos: Map<string,CascadingCombo> = new Map();
 
-    constructor(columns: FlowDisplayColumn[]) {
+    root: CascadingCombos;
+
+    constructor(parent: CascadingCombos, columns: FlowDisplayColumn[]) {
         let cols: Array<FlowDisplayColumn> = columns.sort((a: any,b: any) => {
             switch(true) {
                 case a.DisplayOrder > b.DisplayOrder:
@@ -27,6 +30,7 @@ export default class ValueTree {
         });
         this.values = new Map();
         this.columnValues = new Map();
+        this.root = parent;
     }
 
     setListener(column: string, client: CascadingCombo) {
@@ -69,9 +73,36 @@ export default class ValueTree {
                 this.combos.get(col).refresh();
             }
         });
+        //if we have a selected value for every combo then we need to tell parent to update state
+        let complete: boolean = true;
         this.columns.forEach((column: any, key: string) => {
-
+            if((!this.columnValues.has(key)) || (this.columnValues.get(key)?.length === 0)) {
+                complete = false;
+            }
         });
+        let selectedId: string;
+        if(complete===true) {
+            //let keys: Array<string> = Array.from(this.values.keys());
+            let cols: Array<string> = Array.from(this.columns.keys());
+            let item: Array<string>;
+            let matches: boolean = true;
+            //check each item
+            //for (let pos = 0 ; pos < keys.length ; pos++) {
+            this.values.forEach((value: string[], key: string) => {
+                matches=true;
+                //item = this.values.get(keys[pos]);
+                //compare each value in item to the values in columnValues
+                for(let colpos = 0 ; colpos < value.length ; colpos++) {
+                    if(value[colpos] !== this.columnValues.get(cols[colpos])) {
+                        matches=false;
+                    }
+                }
+                if(matches === true) {
+                    selectedId = key;
+                }
+            });
+        }
+        this.root.selectionChanged(selectedId);
     }
 
     getColumns() : Array<string> {
@@ -191,16 +222,11 @@ export default class ValueTree {
             if(this.columnValues.has(ancestors[pos])) {
                 //yes ancestor value present
                 if(this.columnValues.get(ancestors[pos]) !== value[pos] ) {
-                    console.log("column=" + column + " NO pos=" + pos + " '" + this.columnValues.get(ancestors[pos]) +"' != '" +  value[pos] + "'");
                     matches=false;
-                }
-                else {
-                    console.log("column=" + column + " YES pos=" + pos + "    " + this.columnValues.get(ancestors[pos]) +" == " +  value[pos]);
                 }
             } 
             else {
-                console.log("column=" + column + " NO pos=" + pos + " has ancestor value=" + this.columnValues.has(ancestors[pos]));
-                matches=false;
+               matches=false;
             } 
         }
 
