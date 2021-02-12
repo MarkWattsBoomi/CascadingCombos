@@ -67,6 +67,9 @@ export default class CascadingCombos extends FlowComponent {
         await super.componentDidMount();
         (manywho as any).eventManager.addDoneListener(this.flowMoved, this.componentId);
         // build tree
+        this.model.displayColumns.forEach((col: FlowDisplayColumn) => {
+            this.colMap.set(col.developerName,col);
+        });
         this.buildCoreTable();
         this.forceUpdate();
     }
@@ -148,6 +151,7 @@ export default class CascadingCombos extends FlowComponent {
             });
         }
         await this.setStateValue(objData);
+        manywho.engine.sync(this.flowKey);
     }
     
     render() {

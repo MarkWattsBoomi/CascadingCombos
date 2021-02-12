@@ -48,16 +48,34 @@ export default class CascadingCombo extends React.Component<any,any> {
             <div
                 className="cascom"
             >
-                <select
-
-                    className="cascom-select"
-                    disabled={disabled}
-                    onChange={this.valueChanged}
-                    onFocus={(event: any) => {event.target.selectedIndex = -1}}
-                    ref={(element: HTMLSelectElement) => {this.select = element}}
+                <div
+                    className="cascom-title"
                 >
-                    {options}
-                </select>
+                    <span
+                        className="cascom-title-label"
+                    >
+                        {root.colMap.get(this.props.columnName).label + ":"}
+                    </span>
+                    <span
+                        style={{color: "red", marginRight: "1rem"}}
+                    >
+                        {"*"}
+                    </span>
+                </div>
+                <div
+                    className="cascom-sel"
+                >
+                    <select
+                        className="cascom-select"
+                        disabled={disabled}
+                        onChange={this.valueChanged}
+                        onFocus={(event: any) => {event.target.selectedIndex = -1}}
+                        ref={(element: HTMLSelectElement) => {this.select = element}}
+                    >
+                        {options}
+                    </select>
+                </div>
+                
             </div>
         )
     }
