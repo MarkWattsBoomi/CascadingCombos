@@ -10,7 +10,6 @@ module.exports = function(env) {
             filename: flow.filenames.js,
             path: path.resolve(__dirname, 'build')
         },
-        devtool: 'inline-source-map',
         resolve: {
             extensions: [".ts", ".tsx", ".js", ".json"]
         },
