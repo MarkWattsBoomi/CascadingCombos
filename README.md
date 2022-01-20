@@ -4,6 +4,13 @@ This module provides a cascading combo box implementation.
 
 CascadingCombo
 
+you can include the latest version in your player from here: -
+
+```
+'https://files-manywho-com.s3.amazonaws.com/e1dbcceb-070c-4ce6-95b0-ba282aaf4f48/cascom.css',
+'https://files-manywho-com.s3.amazonaws.com/e1dbcceb-070c-4ce6-95b0-ba282aaf4f48/cascom.js'
+```
+
 ## Functionality
 
 Takes a LIST of options with each combo's values in a property and turns it into an array of combo's (one per list item property).
