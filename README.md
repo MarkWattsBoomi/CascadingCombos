@@ -1,61 +1,39 @@
 This module provides a cascading combo box implementation. 
 
-# Class Names
+# Class Name
 
 CascadingCombo
 
 ## Functionality
 
-The component will display a paginated table with per column sorting and complex filtering tools.
+Takes a LIST of options with each combo's values in a property and turns it into an array of combo's (one per list item property).
 
-It allows outcomes to be attached at table and row level
+Choosing a value from one combo changes the options in the subsequent combo.
+
 
 ## Datasource
 
-Set the datasource to a list of objects
+Set the datasource to a list of objects with one property per combo like this: -
+
+Animal, Mamal, Mouse
+Animal, Mamal, Horse
+Animal, Reptile, Lizard
+Animal, Reptile, Crocodile
+Vegetable, Fruit, Banana
+Vegetable, Fruit, Apple
 
 
 ## State
 
-Create a State LIST object of the type of the model data items.
+Create a State object of the type of the model data items.
 
-
-## Outcomes
-
-Any outcome attached to the component is dealt with in this way: -
-
-* If the outcome is set as "Appears At Top" then it will become a button in the top title bar or its context menu otherwise it becomes a button on the tree node or its context menu.
-
-* If the outcome has its "When this outcome is selected" option set to either "Save Changes" or "Partially Save Changes" and is attached 
-to a tree node then the current node is set as the state value when triggered.
-
-* If the outcome has an "icon" attribute then this value is used to specify the icon, otherwise a default "+" icon is used.  Note: Icons are 
-bootstrap glyphicons without the "glyphicon-" prefix e.g. "trash","edit" etc.
-
-* If the outcome has a "Label" set then this is used as the tooltip otherwise the outcome's name is used.
-
-* "OnSelect" is a special case and is attached to the action of clicking a tree node.
-
-* If the outcome's developer name begins with "CM" (case insensitive) then the outcome is added to either the main tree or the current node's context menu rather than as a button.
-
-* All outcomes including "OnSelect" are optional.
-
-* Outcome order is respected.  
-
-* The expand and contract default buttons in the title bar are given order 10 & 20 respectively to allow for controlling button display order and injecting your outcome around them.
-
-## Outcome Attributes
-
-### icon
-
-Sets the glyphicon to show for the outcome.
 
 
 ## Settings
 
 ### Columns
 
-Sets the display columns for the table.
+Sets the display columns which will become combo boxes.
 
 ### Label
 
@@ -66,10 +44,6 @@ The Label of the component is used as the title bar
 If specified then these are applied as pixel values.
 
 ## Component Attributes
-
-### PaginationSize
-
-Sets the max number of rows to show per pagination page
 
 ### classes
 
