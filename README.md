@@ -56,6 +56,10 @@ If specified then these are applied as pixel values.
 
 Like all components, adding a "classes" attribute will cause that string to be added to the base component's class value
 
+### sortColumn
+optional.
+
+The developerName of a column to use to sort the items in the combo boxes - display order column name
 
 ## Styling
 

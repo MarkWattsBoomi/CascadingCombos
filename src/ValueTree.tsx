@@ -8,7 +8,7 @@ export default class ValueTree {
     columnValues: Map<string, string>;
 
     // each value is an object data's display column values in order and keyed on internal id
-    values: Map<string, string[]>;
+    values: Map<string, {values: string[], displayOrder: number}>;
 
     combos: Map<string, CascadingCombo> = new Map();
 
@@ -50,10 +50,14 @@ export default class ValueTree {
 
     addItem(item: FlowObjectData) {
         const fields: string[] = [];
+        let order: number = 0;
+        if (this.root.getAttribute('sortColumn')) {
+            order = parseInt(item.properties[this.root.getAttribute('sortColumn')].value as string);
+        }
         this.columns.forEach((column: FlowDisplayColumn) => {
             fields.push((item.properties[column.developerName].value as string).trim());
         });
-        this.values.set(item.internalId, fields);
+        this.values.set(item.internalId, {values: fields, displayOrder: order});
     }
 
     setSelectedValue(column: string, value: string) {
@@ -86,12 +90,12 @@ export default class ValueTree {
             let matches: boolean = true;
             // check each item
             // for (let pos = 0 ; pos < keys.length ; pos++) {
-            this.values.forEach((value: string[], key: string) => {
+            this.values.forEach((value: {values: string[], displayOrder: number}, key: string) => {
                 matches = true;
                 // item = this.values.get(keys[pos]);
                 // compare each value in item to the values in columnValues
-                for (let colpos = 0 ; colpos < value.length ; colpos++) {
-                    if (value[colpos] !== this.columnValues.get(cols[colpos])) {
+                for (let colpos = 0 ; colpos < value.values.length ; colpos++) {
+                    if (value.values[colpos] !== this.columnValues.get(cols[colpos])) {
                         matches = false;
                     }
                 }
@@ -145,7 +149,7 @@ export default class ValueTree {
 
     getSelectedItem(): string {
         // based on all columnValues get the internal ID of the matching one
-        this.values.forEach((value: string[]) => {
+        this.values.forEach((value: {values: string[], displayOrder: number}) => {
 
         });
         return '';
@@ -165,10 +169,16 @@ export default class ValueTree {
                     Please select ...
                 </option>,
             );
-            this.values.forEach((value: string[]) => {
+            const matchingValues: Map<string, number> = new Map();
+
+            this.values.forEach((value: {values: string[], displayOrder: number}) => {
                 // must have matching ancestor values
-                if (this.ancestorsMatch(column, ancestors, value)) {
-                     // must be unique in list
+                if (this.ancestorsMatch(column, ancestors, value.values)) {
+                    // must be unique in list
+                    if (!matchingValues.has(value.values[colPos])) {
+                        matchingValues.set(value.values[colPos], value.displayOrder);
+                    }
+                    /*
                     if (!options.has(value[colPos])) {
                         options.set(value[colPos],
                         <option
@@ -178,8 +188,30 @@ export default class ValueTree {
                             {value[colPos]}
                         </option>);
                     }
+                    */
                 }
             });
+
+            // sort them
+            let sortedmatchingValues = Array.from(matchingValues);
+            if (this.root.getAttribute('sortColumn')) {
+                sortedmatchingValues = sortedmatchingValues.sort((a, b) => {
+                    if (a[1] > b[1]) { return 1; }
+                    if (a[1] < b[1]) { return -1; }
+                    return 0;
+                });
+            }
+
+            sortedmatchingValues.forEach((value) => {
+                options.set(value[0],
+                    <option
+                        value={value[0]}
+                        selected={this.columnValues.has(column) && this.columnValues.get(column) === value[0]}
+                    >
+                        {value[0]}
+                    </option>);
+            });
+
         } else {
             options.set('',
                 <option
