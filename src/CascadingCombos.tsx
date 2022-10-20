@@ -1,10 +1,9 @@
 import React, { CSSProperties } from 'react';
 
-import { eLoadingState, FlowComponent, FlowDisplayColumn, FlowMessageBox, FlowObjectData,  FlowObjectDataArray, FlowOutcome, modalDialogButton } from 'flow-component-model';
-import FlowContextMenu from 'flow-component-model/lib/Dialogs/FlowContextMenu';
-import CascadingCombo from './CascadingCombo';
+import { eLoadingState, FlowComponent, FlowContextMenu, FlowDisplayColumn, FlowMessageBox, FlowObjectData} from 'flow-component-model';
 import './CascadingCombos.css';
 import ValueTree from './ValueTree';
+import CascadingCombo from './CascadingCombo';
 
 // declare const manywho: IManywho;
 declare const manywho: any;
@@ -36,12 +35,14 @@ export default class CascadingCombos extends FlowComponent {
     }
 
     // stores / deletes a ref to a table row as it's created or destroyed
-    setCombo(key: string, element: any) {
+    setCombo(key: string, element: CascadingCombo) {
         if (element) {
             this.combos.set(key, element);
+            //this.valTree.setListener(key, element);
         } else {
             if (this.combos.has(key)) {
                 this.combos.delete(key);
+                //this.valTree.setListener(key, undefined);
             }
         }
     }
@@ -66,7 +67,7 @@ export default class CascadingCombos extends FlowComponent {
         this.model.displayColumns.forEach((col: FlowDisplayColumn) => {
             this.colMap.set(col.developerName, col);
         });
-        this.buildCoreTable();
+        await this.buildCoreTable();
         this.forceUpdate();
     }
 
@@ -80,23 +81,23 @@ export default class CascadingCombos extends FlowComponent {
     // constructs the a flat a map of rows ready for searching, sorting and direct access
     // also builds the display column map
     ///////////////////////////////////////////////////////////////////////////////////////////
-    buildCoreTable() {
+    async buildCoreTable() {
         this.valTree = new ValueTree(this, this.model.displayColumns);
-        this.valTree.addItems(this.model.dataSource);
-
         // we just loaded the core row data, create the child combo objects based on the colMap
-        this.buildCombos();
+        await this.buildCombos();
+        this.valTree.addItems(this.model.dataSource, this.getStateValue() as FlowObjectData);
     }
 
     /////////////////////////////////////////////////////////////////////
     // Builds the rowElements from the currentRowMap and forces a redraw
     ////////////////////////////////////////////////////////////////////
-    buildCombos() {
+    async buildCombos() {
         this.comboElements = [];
         // loop over colMap adding child objects
         this.valTree.getColumns().forEach((column: string) => {
             this.comboElements.push(
                 <CascadingCombo
+                    id={column}
                     key={column}
                     columnName={column}
                     root={this}

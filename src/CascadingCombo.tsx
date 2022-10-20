@@ -13,8 +13,8 @@ export default class CascadingCombo extends React.Component<any, any> {
 
     // this is triggered by the ValueTree to tell us a parent combo's value changed
     refresh() {
-        this.forceUpdate();
         this.select.selectedIndex = 0;
+        this.forceUpdate();
     }
 
     setSelect(select: HTMLSelectElement) {
@@ -29,12 +29,16 @@ export default class CascadingCombo extends React.Component<any, any> {
 
     componentDidMount() {
         const root: CascadingCombos = this.props.root;
-        root.valTree.setListener(this.props.columnName, this);
+        //root.valTree.setListener(this.props.columnName, this);
     }
 
     componentWillUnmount() {
         const root: CascadingCombos = this.props.root;
-        root.valTree.setListener(this.props.columnName, undefined);
+        //root.valTree.setListener(this.props.columnName, undefined);
+    }
+
+    gotFocus(e: any) {
+        //e.currentTarget.selectedIndex = -1; 
     }
 
     render() {
@@ -69,7 +73,7 @@ export default class CascadingCombo extends React.Component<any, any> {
                         className="cascom-select"
                         disabled={disabled}
                         onChange={this.valueChanged}
-                        onFocus={(event: any) => {event.target.selectedIndex = -1; }}
+                        onFocus={this.gotFocus}
                         ref={(element: HTMLSelectElement) => {this.select = element; }}
                     >
                         {options}

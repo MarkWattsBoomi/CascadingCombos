@@ -10,8 +10,6 @@ export default class ValueTree {
     // each value is an object data's display column values in order and keyed on internal id
     values: Map<string, {values: string[], displayOrder: number}>;
 
-    combos: Map<string, CascadingCombo> = new Map();
-
     root: CascadingCombos;
 
     constructor(parent: CascadingCombos, columns: FlowDisplayColumn[]) {
@@ -31,8 +29,11 @@ export default class ValueTree {
         this.values = new Map();
         this.columnValues = new Map();
         this.root = parent;
+
+        this.setSelectedValue = this.setSelectedValue.bind(this);
     }
 
+    /*
     setListener(column: string, client: CascadingCombo) {
         if (client) {
             this.combos.set(column, client);
@@ -41,11 +42,17 @@ export default class ValueTree {
         }
 
     }
+    */
 
-    addItems(items: FlowObjectDataArray) {
+    addItems(items: FlowObjectDataArray, stateValue: FlowObjectData) {
         items.items.forEach((item: FlowObjectData) => {
             this.addItem(item);
         });
+        if(stateValue){
+            this.columns?.forEach((col: FlowDisplayColumn) => {
+                this.columnValues.set(col.developerName, stateValue.properties[col.developerName]?.value as string)
+            });
+        }
     }
 
     addItem(item: FlowObjectData) {
@@ -68,13 +75,13 @@ export default class ValueTree {
         }
 
         const descendents: string[] = this.getDescendents(column);
-        descendents.forEach((col: string) => {
+        for(let pos = 0 ; pos < descendents.length ; pos++) {
             // remove any previous selection on children
-            this.columnValues.delete(col);
-            if (this.combos.has(col)) {
-                this.combos.get(col).refresh();
+            this.columnValues.delete(descendents[pos]);
+            if (this.root.combos.has(descendents[pos])) {
+                this.root.combos.get(descendents[pos]).refresh();
             }
-        });
+        }
         // if we have a selected value for every combo then we need to tell parent to update state
         let complete: boolean = true;
         this.columns.forEach((column: any, key: string) => {
@@ -103,8 +110,9 @@ export default class ValueTree {
                     selectedId = key;
                 }
             });
+            this.root.selectionChanged(selectedId);
         }
-        this.root.selectionChanged(selectedId);
+        
     }
 
     getColumns(): string[] {

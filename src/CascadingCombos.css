@@ -28,7 +28,7 @@
 
 .cascom-title-label {
     font-size: 1.3rem !important;
-    color: #fefefe;
+    color: #000;
     margin-right: 0.1rem;
     margin-left: auto;
 }
@@ -48,7 +48,7 @@
     box-shadow: none !important;
     border: 1px solid #ccc !important;
     margin: 5px !important;
-    color: #fefefe !important;
+    color: #000 !important;
 }
 
 .cascom-select option {

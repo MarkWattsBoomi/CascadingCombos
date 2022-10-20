@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "jsx": "react",
     "outDir": "./build/",
     "target": "es5",
     "lib": [
@@ -19,8 +20,8 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react"
+    "downlevelIteration" : true,
+    "sourceMap": true
   },
   "include": [
     "src/**/*"
