@@ -14,7 +14,7 @@
 
 .cascom {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     margin: auto;
     margin-left: 0;
 }
@@ -22,32 +22,33 @@
 .cascom-title {
     display: flex;
     flex-direction: row;
-    margin: auto;
     width: fit-content;
 }
 
 .cascom-title-label {
-    font-size: 1.3rem !important;
+    font-size: 0.9rem !important;
     color: #000;
-    margin-right: 0.1rem;
+    margin-right: 0.3rem;
     margin-left: auto;
+    font-weight: 600;
+    color: #666;
 }
 
 .cascom-sel {
     display: flex;
     flex-direction: row;
-    margin: auto;
+    margin: 0 auto 0.5rem 0;
 }
 
 .cascom-select {
     appearance: unset !important;
     -webkit-appearance: revert !important;
     background: none !important;
-    padding: 5px;
-    font-size: 1.3rem !important;
+    padding: 8px 5px;
+    font-size: 0.9rem !important;
     box-shadow: none !important;
     border: 1px solid #ccc !important;
-    margin: 5px !important;
+    margin: 5px 0 !important;
     color: #000 !important;
 }
 

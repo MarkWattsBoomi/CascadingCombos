@@ -94,15 +94,16 @@ export default class CascadingCombos extends FlowComponent {
     async buildCombos() {
         this.comboElements = [];
         // loop over colMap adding child objects
-        this.valTree.getColumns().forEach((column: string) => {
+        this.valTree.getColumns().forEach((column: FlowDisplayColumn) => {
             this.comboElements.push(
                 <CascadingCombo
-                    id={column}
-                    key={column}
-                    columnName={column}
+                    id={column.developerName}
+                    key={column.developerName}
+                    columnName={column.developerName}
                     root={this}
-                    parents={this.valTree.getAncestors(column)}
-                    ref={(element: CascadingCombo) => {this.setCombo(column, element); }}
+                    parents={this.valTree.getAncestors(column.developerName)}
+                    ref={(element: CascadingCombo) => {this.setCombo(column.developerName, element); }}
+                    visible={column.visible}
                 />,
             );
         });
@@ -167,7 +168,7 @@ export default class CascadingCombos extends FlowComponent {
             style.height = this.model.height + 'px';
         }
 
-        if (this.getAttribute('direction', 'row').toLowerCase() === 'column') {
+        if (this.getAttribute('direction', 'column').toLowerCase() === 'column') {
             classes += ' cascoms-column ';
         } else {
             classes += ' cascoms-row ';

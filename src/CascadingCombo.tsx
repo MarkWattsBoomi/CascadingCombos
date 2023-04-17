@@ -48,9 +48,15 @@ export default class CascadingCombo extends React.Component<any, any> {
         if (root.valTree.hasAncestors(this.props.columnName)) {
             disabled = false;
         }
+        let className: string = "cascom";
+        let style: CSSProperties = {};
+        if(this.props.visible===false){
+            style.visibility="hidden"
+        }
         return(
             <div
-                className="cascom"
+                className={className}
+                style={style}
             >
                 <div
                     className="cascom-title"
@@ -59,11 +65,6 @@ export default class CascadingCombo extends React.Component<any, any> {
                         className="cascom-title-label"
                     >
                         {root.colMap.get(this.props.columnName).label + ':'}
-                    </span>
-                    <span
-                        style={{color: 'red', marginRight: '1rem'}}
-                    >
-                        {'*'}
                     </span>
                 </div>
                 <div

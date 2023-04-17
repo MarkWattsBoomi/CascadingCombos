@@ -84,9 +84,11 @@ export default class ValueTree {
         }
         // if we have a selected value for every combo then we need to tell parent to update state
         let complete: boolean = true;
-        this.columns.forEach((column: any, key: string) => {
-            if ((!this.columnValues.has(key)) || (this.columnValues.get(key)?.length === 0)) {
-                complete = false;
+        this.columns.forEach((column: FlowDisplayColumn, key: string) => {
+            if(column.visible) {
+                if ((!this.columnValues.has(key)) || (this.columnValues.get(key)?.length === 0)) {
+                    complete = false;
+                }
             }
         });
         let selectedId: string;
@@ -101,9 +103,12 @@ export default class ValueTree {
                 matches = true;
                 // item = this.values.get(keys[pos]);
                 // compare each value in item to the values in columnValues
-                for (let colpos = 0 ; colpos < value.values.length ; colpos++) {
-                    if (value.values[colpos] !== this.columnValues.get(cols[colpos])) {
-                        matches = false;
+                for (let colpos = 0 ; colpos < cols.length ; colpos++) {
+                    //we're only testing visible columns
+                    if(this.columns.get(cols[colpos]).visible){
+                        if (value.values[colpos] !== this.columnValues.get(cols[colpos])) {
+                            matches = false;
+                        }
                     }
                 }
                 if (matches === true) {
@@ -115,8 +120,14 @@ export default class ValueTree {
         
     }
 
-    getColumns(): string[] {
-        return Array.from(this.columns.keys());
+    getColumns(): FlowDisplayColumn[] {
+        let cols: FlowDisplayColumn[] = [];
+        this.columns.forEach((col: FlowDisplayColumn) => {
+            if(col.visible === true) {
+                cols.push(col);
+            }
+        });
+        return cols;
     }
 
     getColumnPos(column: string): number {
